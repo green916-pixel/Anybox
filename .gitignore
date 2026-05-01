@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+.env
+.env.local
+.env.*.local
+
+# Build artifacts
+dist/
+build/
+out/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+.DS_Store
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+
+# Cache
+.cache/
+.parcel-cache/

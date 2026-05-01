@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnyBox - Video Link Player</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    backdropBlur: {
+                        xs: '2px',
+                    },
+                    colors: {
+                        'glass': 'rgba(255, 255, 255, 0.1)',
+                        'glass-hover': 'rgba(255, 255, 255, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Plyr CSS -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white overflow-x-hidden">
+    <!-- Animated Background -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-blob top-0 left-0"></div>
+        <div class="absolute w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-blob animation-delay-2000 bottom-0 right-0"></div>
+        <div class="absolute w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-blob animation-delay-4000 top-1/2 left-1/2"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="relative z-10 min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="border-b border-white/10 backdrop-blur-md bg-black/20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
+                        <i class="fas fa-play text-xl text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">AnyBox</h1>
+                        <p class="text-sm text-gray-400">Universal Video Link Player</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Player Section -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Input Card -->
+                    <div class="glass-card rounded-2xl border border-white/10 p-6 hover:border-white/20 transition-all">
+                        <label class="block text-sm font-semibold text-gray-300 mb-3">
+                            <i class="fas fa-link mr-2 text-blue-400"></i>Paste Video URL
+                        </label>
+                        <div class="flex gap-3">
+                            <input 
+                                type="text" 
+                                id="urlInput" 
+                                placeholder="YouTube, MP4, Terabox, PlayIt, or any video URL..."
+                                class="flex-1 px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 placeholder-gray-500 transition-all"
+                            >
+                            <button 
+                                id="playBtn" 
+                                class="px-6 py-3 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 font-semibold transition-all hover:shadow-lg hover:shadow-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            >
+                                <i class="fas fa-play"></i>
+                                <span>Play</span>
+                            </button>
+                        </div>
+                        <div id="errorMessage" class="mt-3 text-sm text-red-400 hidden flex items-center gap-2">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span id="errorText"></span>
+                        </div>
+                    </div>
+
+                    <!-- Player Card -->
+                    <div class="glass-card rounded-2xl border border-white/10 p-6 overflow-hidden">
+                        <div id="playerContainer" class="hidden">
+                            <div class="mb-3 text-sm text-gray-400">
+                                <span id="videoTitle">Loading...</span>
+                            </div>
+                            <div id="player" class="w-full">
+                                <!-- Plyr will initialize here -->
+                            </div>
+                        </div>
+                        
+                        <div id="emptyState" class="text-center py-16">
+                            <div class="text-6xl mb-4 text-gray-500">
+                                <i class="fas fa-film"></i>
+                            </div>
+                            <p class="text-gray-400 text-lg mb-2">No video selected</p>
+                            <p class="text-gray-500 text-sm">Paste a video URL above and click Play to get started</p>
+                        </div>
+                    </div>
+
+                    <!-- Supported Formats -->
+                    <div class="glass-card rounded-2xl border border-white/10 p-6">
+                        <h3 class="text-sm font-semibold text-gray-300 mb-3">
+                            <i class="fas fa-check-circle mr-2 text-green-400"></i>Supported Formats
+                        </h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            <div class="text-xs text-gray-400 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-blue-400 rounded-full"></span>YouTube
+                            </div>
+                            <div class="text-xs text-gray-400 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-blue-400 rounded-full"></span>MP4/WebM
+                            </div>
+                            <div class="text-xs text-gray-400 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-blue-400 rounded-full"></span>HLS/M3U8
+                            </div>
+                            <div class="text-xs text-gray-400 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-blue-400 rounded-full"></span>Terabox
+                            </div>
+                            <div class="text-xs text-gray-400 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-blue-400 rounded-full"></span>PlayIt
+                            </div>
+                            <div class="text-xs text-gray-400 flex items-center gap-2">
+                                <span class="w-2 h-2 bg-blue-400 rounded-full"></span>Direct Links
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="lg:col-span-1 space-y-6">
+                    <!-- History Card -->
+                    <div class="glass-card rounded-2xl border border-white/10 p-6">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-4 flex items-center gap-2">
+                            <i class="fas fa-history text-purple-400"></i>History
+                        </h3>
+                        <div id="historyList" class="space-y-2">
+                            <p class="text-sm text-gray-500 text-center py-4">No history yet</p>
+                        </div>
+                        <button 
+                            id="clearHistoryBtn" 
+                            class="w-full mt-4 px-3 py-2 rounded-lg text-sm font-medium bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all text-gray-300"
+                        >
+                            <i class="fas fa-trash mr-2"></i>Clear History
+                        </button>
+                    </div>
+
+                    <!-- Info Card -->
+                    <div class="glass-card rounded-2xl border border-white/10 p-6">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-3 flex items-center gap-2">
+                            <i class="fas fa-info-circle text-blue-400"></i>About
+                        </h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            AnyBox is a stateless video player that supports multiple formats. Your playback history is stored locally in your browser.
+                        </p>
+                        <div class="mt-4 space-y-2 text-xs text-gray-500">
+                            <p><strong>Version:</strong> 1.0.0</p>
+                            <p><strong>Storage:</strong> Browser LocalStorage</p>
+                            <p><strong>Database:</strong> None (Stateless)</p>
+                        </div>
+                    </div>
+
+                    <!-- Features Card -->
+                    <div class="glass-card rounded-2xl border border-white/10 p-6">
+                        <h3 class="text-lg font-semibold text-gray-200 mb-3 flex items-center gap-2">
+                            <i class="fas fa-star text-yellow-400"></i>Features
+                        </h3>
+                        <ul class="text-sm text-gray-400 space-y-2">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-green-400 text-xs"></i>
+                                <span>Multi-format support</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-green-400 text-xs"></i>
+                                <span>Responsive design</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-green-400 text-xs"></i>
+                                <span>Dark glassmorphism</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-green-400 text-xs"></i>
+                                <span>Local history</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-green-400 text-xs"></i>
+                                <span>Error handling</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-green-400 text-xs"></i>
+                                <span>No backend needed</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-white/10 backdrop-blur-md bg-black/20 mt-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-gray-500">
+                <p>© 2024 AnyBox. Universal Video Player. Ready for Vercel & Netlify deployment.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Plyr JS -->
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/urlParser.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
